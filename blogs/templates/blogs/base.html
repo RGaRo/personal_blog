@@ -1,10 +1,3 @@
-{% comment %}
-  templates/base.html
-  • “Home” and “Contact” now use a cool outlined style (`.nav-btn`)
-    so they stand apart from the solid-blue CTA buttons (Log In / Sign Up / Log Out).
-  • Still horizontal on mobile (icons-only pills).
-{% endcomment %}
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -39,59 +32,68 @@
 
     nav ul{list-style:none;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;justify-content:flex-end;padding-top:.5rem;}
 
-    /* ── “Home / Contact” outlined button ────────────────── */
-    .nav-btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
-      padding:.45rem 1.1rem;border:2px solid var(--accent);border-radius:22px;
-      font-size:.8rem;font-weight:600;color:var(--accent);text-decoration:none;
-      background:transparent;transition:background .25s,color .25s,transform .2s;
-    }
+    /* Outlined NAV buttons (Home / Contact) */
+    .nav-btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+             padding:.45rem 1.1rem;border:2px solid var(--accent);border-radius:22px;
+             font-size:.8rem;font-weight:600;color:var(--accent);text-decoration:none;
+             background:transparent;transition:background .25s,color .25s,transform .2s;}
     .nav-btn i{font-size:.9rem;}
     .nav-btn:hover{background:var(--accent);color:#fff;transform:translateY(-2px);}
 
-    /* ── CTA buttons (Log In / Sign Up / Log Out) ─────────── */
-    .cta-btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
-      padding:.5rem 1.2rem;border-radius:22px;font-size:.8rem;font-weight:600;
-      color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-h));
-      border:none;text-decoration:none;cursor:pointer;box-shadow:0 3px 6px rgba(0,0,0,.08);
-      transition:transform .2s,box-shadow .2s;
-    }
+    /* CTA buttons (LogIn / SignUp / LogOut) */
+    .cta-btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+             padding:.5rem 1.2rem;border-radius:22px;font-size:.8rem;font-weight:600;
+             color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-h));
+             border:none;text-decoration:none;cursor:pointer;box-shadow:0 3px 6px rgba(0,0,0,.08);
+             transition:transform .2s,box-shadow .2s;position:relative;}
     .cta-btn i{font-size:.9rem;}
     .cta-btn:hover{transform:translateY(-2px);box-shadow:0 6px 12px rgba(0,0,0,.12);}
 
-    /* ── Mobile tweaks (<600 px) ─────────────────────────── */
-    @media(max-width:600px){
-      nav{padding:.75rem 1rem;}
-      nav ul{flex-direction:row;gap:.65rem;border-top:1px solid #eee;padding-top:.65rem;}
+    /* Greeting bar (desktop) */
+    .greeting-bar{position:fixed;top:64px;left:0;right:0;background:var(--accent);color:#fff;
+                  text-align:center;padding:.45rem .75rem;font-size:.8rem;font-weight:500;z-index:999;}
+    .greeting-bar a{color:#fff;text-decoration:underline;font-weight:600;} .greeting-bar a:hover{color:#e9eefb;}
 
-      /* Home / Contact become icon pills (outline) */
-      .nav-btn{padding:.55rem;border-radius:50%;width:40px;height:40px;min-width:40px;border-width:1px;}
+    /* ─── MOBILE (<600 px) ─────────────────────────────── */
+    @media(max-width:600px){
+
+      /* Navbar keeps horizontal list but tighter gap */
+      nav{padding:.75rem 1rem;}
+      nav ul{gap:.55rem;border-top:1px solid #eee;padding-top:.55rem;}
+
+      /* Outlined pills — icon-only, tooltip */
+      .nav-btn{padding:.55rem;width:40px;height:40px;min-width:40px;border-radius:50%;border-width:1px;}
       .nav-btn span{display:none;}
       .nav-btn i{font-size:1rem;}
 
-      /* CTA pills (solid) – icon-only */
-      .cta-btn{padding:.6rem;border-radius:50%;width:42px;height:42px;min-width:42px;}
+      /* CTA icon pills */
+      .cta-btn{padding:.6rem;width:42px;height:42px;min-width:42px;border-radius:50%;}
       .cta-btn span{display:none;}
-      .cta-btn::after{content:attr(title);position:absolute;bottom:-2rem;left:50%;transform:translateX(-50%);
-                      background:var(--bg-card);color:var(--fg-soft);font-size:.65rem;
-                      padding:.25rem .5rem;border-radius:4px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.08);
-                      opacity:0;pointer-events:none;transition:opacity .2s;z-index:9999;}
-      .cta-btn:hover::after,.cta-btn:focus::after{opacity:1;}
 
-      /* Tooltip for outlined pills too */
-      .nav-btn::after{content:attr(title);position:absolute;bottom:-2rem;left:50%;transform:translateX(-50%);
-                      background:var(--bg-card);color:var(--fg-soft);font-size:.65rem;padding:.25rem .5rem;
-                      border-radius:4px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.08);
-                      opacity:0;pointer-events:none;transition:opacity .2s;z-index:9999;}
+      /* Shared tooltip for all icon pills */
+      .cta-btn::after,
+      .nav-btn::after{
+        content:attr(title);
+        position:absolute;bottom:-2rem;left:50%;transform:translateX(-50%);
+        background:var(--bg-card);color:var(--fg-soft);font-size:.62rem;
+        padding:.25rem .55rem;border-radius:4px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.08);
+        opacity:0;pointer-events:none;transition:opacity .2s;z-index:9999;
+      }
+      .cta-btn:hover::after,.cta-btn:focus::after,
       .nav-btn:hover::after,.nav-btn:focus::after{opacity:1;}
+
+      /* Greeting bar flows after nav, not fixed */
+      .greeting-bar{
+        position:static;
+        margin-top:.6rem;
+        border-radius:6px;
+      }
+
+      /* More space for header + bar */
+      body{padding-top:140px;}
     }
 
-    /* Greeting bar */
-    .greeting-bar{position:fixed;top:64px;left:0;right:0;background:var(--accent);color:#fff;
-                  text-align:center;padding:.4rem .75rem;font-size:.8rem;font-weight:500;z-index:999;}
-    .greeting-bar a{color:#fff;text-decoration:underline;font-weight:600;} .greeting-bar a:hover{color:#e9eefb;}
-
+    /* MAIN & FOOTER remain the same */
     main{max-width:800px;margin:2rem auto;padding:0 1rem;}
     .card{background:var(--bg-card);border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.06);padding:2rem;margin-bottom:2rem;}
 
@@ -107,87 +109,89 @@
 </head>
 <body id="top">
 
-<!-- NAVBAR -->
-<nav>
-  <div class="nav-top">
-    <a href="{% url 'blogs:home_page' %}" class="brand">The&nbsp;Code&nbsp;Chronicle</a>
-    <ul>
-      <!-- Home -->
-      <li>
-        <a href="{% url 'blogs:home_page' %}" class="nav-btn" title="Home">
-          <i class="fas fa-house-chimney-window"></i><span>Home</span>
-        </a>
-      </li>
-      <!-- Contact -->
-      <li>
-        <a href="#footer" class="nav-btn" title="Contact">
-          <i class="fas fa-paper-plane"></i><span>Contact</span>
-        </a>
-      </li>
-
-      {% if user.is_authenticated %}
-        <!-- Log Out -->
-        <li>
-          <form action="{% url 'accounts:logout' %}" method="post" style="margin:0;">
-            {% csrf_token %}
-            <button type="submit" class="cta-btn" title="Log Out">
-              <i class="fas fa-right-from-bracket"></i><span>Log&nbsp;Out</span>
-            </button>
-          </form>
-        </li>
-      {% else %}
-        <!-- Log In -->
-        <li>
-          <a href="{% url 'accounts:login' %}" class="cta-btn" title="Log In">
-            <i class="fas fa-right-to-bracket"></i><span>Log&nbsp;In</span>
-          </a>
-        </li>
-        <!-- Sign Up -->
-        <li>
-          <a href="{% url 'accounts:register' %}" class="cta-btn" title="Sign Up">
-            <i class="fas fa-user-plus"></i><span>Sign&nbsp;Up</span>
-          </a>
-        </li>
-      {% endif %}
-    </ul>
-  </div>
-</nav>
-
-<!-- GREETING BAR -->
-{% if user.is_authenticated %}
-  <div class="greeting-bar">Welcome back, {{ user.first_name|default:user.username|upper }}! Ready to create something amazing? 🚀</div>
-{% else %}
-  <div class="greeting-bar">New here? <a href="{% url 'accounts:login' %}">Log in</a> or <a href="{% url 'accounts:register' %}">sign up</a> and share your coding journey! 🚀</div>
-{% endif %}
-
-<!-- MAIN -->
-<main>{% block content %}{% endblock %}</main>
-
-<!-- FOOTER -->
-<footer id="footer">
-  <div class="footer-grid">
-    <div class="footer-section">
-      <h3>Contact</h3>
-      <p>Email: rene.garza.rojas@outlook.com</p>
-      <p>Phone: +52&nbsp;82&nbsp;8289&nbsp;0526</p>
-      <p>Monterrey, NL, Mexico</p>
-    </div>
-    <div class="footer-section">
-      <h3>Social</h3>
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-top">
+      <a href="{% url 'blogs:home_page' %}" class="brand">The&nbsp;Code&nbsp;Chronicle</a>
       <ul>
-        <li><a href="https://github.com/"   target="_blank">GitHub</a></li>
-        <li><a href="https://x.com/"        target="_blank">X</a></li>
-        <li><a href="https://linkedin.com/" target="_blank">LinkedIn</a></li>
+        <!-- Home -->
+        <li>
+          <a href="{% url 'blogs:home_page' %}" class="nav-btn" title="Home">
+            <i class="fas fa-house-chimney-window"></i><span>Home</span>
+          </a>
+        </li>
+        <!-- Contact -->
+        <li>
+          <a href="#footer" class="nav-btn" title="Contact">
+            <i class="fas fa-paper-plane"></i><span>Contact</span>
+          </a>
+        </li>
+
+        {% if user.is_authenticated %}
+          <!-- Log Out (POST) -->
+          <li>
+            <form action="{% url 'accounts:logout' %}" method="post" style="margin:0;">
+              {% csrf_token %}
+              <button type="submit" class="cta-btn" title="Log Out">
+                <i class="fas fa-right-from-bracket"></i><span>Log&nbsp;Out</span>
+              </button>
+            </form>
+          </li>
+        {% else %}
+          <!-- Log In -->
+          <li>
+            <a href="{% url 'accounts:login' %}" class="cta-btn" title="Log In">
+              <i class="fas fa-right-to-bracket"></i><span>Log&nbsp;In</span>
+            </a>
+          </li>
+          <!-- Sign Up -->
+          <li>
+            <a href="{% url 'accounts:register' %}" class="cta-btn" title="Sign Up">
+              <i class="fas fa-user-plus"></i><span>Sign&nbsp;Up</span>
+            </a>
+          </li>
+        {% endif %}
       </ul>
     </div>
-    <div class="footer-section">
-      <h3>Programming Skills</h3>
-      <ul><li>Django</li></ul>
-    </div>
-  </div>
-  <p class="copyright">&copy; All rights reserved</p>
-</footer>
+  </nav>
 
-{% block extra_scripts %}{% endblock %}
+  <!-- GREETING BAR -->
+  {% if user.is_authenticated %}
+    <div class="greeting-bar">Welcome back, {{ user.first_name|default:user.username|upper }}! Ready to create something amazing? 🚀</div>
+  {% else %}
+    <div class="greeting-bar">New here? <a href="{% url 'accounts:login' %}">Log in</a> or <a href="{% url 'accounts:register' %}">sign up</a> and share your coding journey! 🚀</div>
+  {% endif %}
+
+  <!-- MAIN CONTENT -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <div class="footer-grid">
+      <div class="footer-section">
+        <h3>Contact</h3>
+        <p>Email: rene.garza.rojas@outlook.com</p>
+        <p>Phone: +52&nbsp;82&nbsp;8289&nbsp;0526</p>
+        <p>Monterrey, NL, Mexico</p>
+      </div>
+      <div class="footer-section">
+        <h3>Social</h3>
+        <ul>
+          <li><a href="https://github.com/" target="_blank">GitHub</a></li>
+          <li><a href="https://x.com/" target="_blank">X</a></li>
+          <li><a href="https://linkedin.com/" target="_blank">LinkedIn</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Programming Skills</h3>
+        <ul><li>Django</li></ul>
+      </div>
+    </div>
+    <p class="copyright">&copy; All rights reserved</p>
+  </footer>
+
+  {% block extra_scripts %}{% endblock %}
 </body>
 </html>
