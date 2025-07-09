@@ -2,14 +2,12 @@
 
 Este proyecto utiliza Docker y Docker Compose para facilitar el despliegue y desarrollo de una aplicación Django con base de datos SQLite.
 
----
 
 ## Requisitos
 
 - Docker
 - Docker Compose
 
----
 
 ## Configuración
 
@@ -21,7 +19,6 @@ Este proyecto utiliza Docker y Docker Compose para facilitar el despliegue y des
 - `docker-compose.yml`
 - `entrypoint.sh`
 
----
 
 ## Construir y levantar los contenedores
 
@@ -29,7 +26,6 @@ Para construir las imágenes sin usar caché y levantar los servicios en segundo
 ```bash
 docker compose build --no-cache && docker compose up -d
 ```
----
 
 ## Acceso a la aplicación
 
@@ -37,7 +33,6 @@ Una vez que los contenedores estén corriendo, abre tu navegador y navega a:
 ```bash
 http://localhost:8000
 ```
----
 
 ## Logs
 
@@ -49,7 +44,6 @@ Para detener los contenedores:
 ```bash
 docker-compose down
 ```
----
 
 ## Notas
 
