@@ -1,4 +1,4 @@
-name: "the_code_chroncicle"
+name: "blog_project"
 type: "python:3.13"
 
 relationships:
