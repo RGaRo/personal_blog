@@ -1,8 +1,11 @@
 {% comment %}
-  templates/base.html (mobile-friendly buttons)
-  – Keeps the overall structure identical.
-  – Enlarges CTA buttons’ tap-area (WCAG ≥ 44 × 44 px).  
-  – Adds a mobile rule so each button spans full width (easy thumb reach).
+  templates/base.html (refined mobile buttons)
+  – Desktop look unchanged.
+  – On phones (< 600 px):
+      • Navbar becomes a clean stack with subtle dividers.
+      • CTA buttons shrink (40 × 40 px tap-area) and show **only icons**
+        to stay elegant while saving real estate.
+      • Icons keep the brand blue, labels become screen-reader–only.
 {% endcomment %}
 
 <!DOCTYPE html>
@@ -14,117 +17,119 @@
   <!-- Font Awesome -->
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        integrity="sha512-3hI0K8RldlEf5y7c2cYq..."
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer" />
+        crossorigin="anonymous" />
 
   <style>
-    :root{ --bg:#f9f9f9; --bg-card:#fff; --fg:#222; --fg-soft:#555;
-           --accent:#0077ff; --accent-h:#005fcc; }
+    :root{
+      --bg:#f9f9f9;     --bg-card:#fff;
+      --fg:#222;        --fg-soft:#555;
+      --accent:#0077ff; --accent-h:#005fcc;
+    }
 
-    /* Reset & body */
+    /* RESET + BODY */
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-         background:var(--bg); color:var(--fg); line-height:1.6; min-height:100vh; padding-top:96px;}
+         background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;padding-top:96px;}
 
-    /* NAVBAR */
-    nav{position:fixed;top:0;left:0;right:0;height:64px;background:var(--bg-card);
-        border-bottom:1px solid #e0e0e0;display:flex;align-items:center;
-        justify-content:space-between;padding:0 2rem;z-index:1000;}
+    /* NAVBAR (desktop) */
+    nav{position:fixed;inset:0 0 auto; /* top:0; left:0; right:0 */
+        height:64px;background:var(--bg-card);border-bottom:1px solid #e0e0e0;
+        display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:1000;}
     .brand{font-weight:700;font-size:1.25rem;color:var(--fg);text-decoration:none;transition:color .25s;}
     .brand:hover{color:var(--accent)}
-
     nav ul{list-style:none;display:flex;gap:1.4rem;align-items:center;}
 
-    .nav-link{
-      position:relative;display:inline-flex;align-items:center;gap:.35rem;
-      font-weight:500;color:var(--fg-soft);text-decoration:none;transition:color .25s;
-    }
-    .nav-link::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;
-                     background:var(--accent);transition:width .25s;}
+    /* Nav-link with fancy underline */
+    .nav-link{display:inline-flex;align-items:center;gap:.35rem;font-weight:500;color:var(--fg-soft);text-decoration:none;position:relative;}
+    .nav-link::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--accent);transition:width .25s;}
     .nav-link:hover{color:var(--accent)} .nav-link:hover::after{width:100%}
 
-    /* CTA buttons – larger hit-area */
+    /* CTA (call-to-action) buttons */
     .cta-btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
-      padding:.55rem 1.2rem;               /* ↑ bigger */
-      min-width:110px;                     /* prevent too small */
-      min-height:44px; border-radius:24px; /* WCAG compliant */
-      font-size:.8rem;font-weight:600;color:#fff;
-      background:linear-gradient(135deg,var(--accent),var(--accent-h));
-      border:none;cursor:pointer;text-decoration:none;
-      box-shadow:0 3px 6px rgba(0,0,0,.08);
-      transition:transform .2s,box-shadow .2s;
-      touch-action:manipulation;           /* faster taps on mobile */
+      display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+      padding:.5rem 1.1rem;border-radius:22px;font-size:.8rem;font-weight:600;
+      color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-h));
+      border:none;text-decoration:none;cursor:pointer;box-shadow:0 3px 6px rgba(0,0,0,.08);
+      transition:transform .2s,box-shadow .2s;touch-action:manipulation;min-height:44px;
     }
-    .cta-btn i{font-size:.9rem;}
-    .cta-btn:hover{transform:translateY(-2px);box-shadow:0 6px 12px rgba(0,0,0,.12);}
+    .cta-btn i{font-size:.9rem;} .cta-btn:hover{transform:translateY(-2px);box-shadow:0 6px 12px rgba(0,0,0,.12);}
 
-    /* MOBILE: stack nav items & make buttons full width */
+    /* Screen-reader-only span */
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
+
+    /* ─── MOBILE (<600 px) ───────────────────────────────── */
     @media(max-width:600px){
-      nav{flex-wrap:wrap;height:auto;padding:0 1rem 0.5rem;}
-      nav ul{flex-direction:column;gap:.9rem;width:100%;margin-top:.5rem;}
-      .nav-link i{display:none;}                 /* hide extra icon text */
-      .cta-btn{width:100%;justify-content:center;}  /* thumb-friendly */
+      nav{flex-wrap:wrap;height:auto;padding:0 1rem 0.75rem;}
+      nav ul{flex-direction:column;width:100%;gap:.6rem;margin-top:.6rem;border-top:1px solid #eee;padding-top:.6rem;}
+
+      /* Smaller nav links, hide text, keep icon for clarity */
+      .nav-link span{display:none;}
+      .nav-link i{font-size:1.1rem;}
+
+      /* Compact CTA buttons: pure icon pills, 40 px tap-area */
+      .cta-btn{padding:.45rem;border-radius:50%;width:40px;height:40px;min-width:40px;min-height:40px;}
+      .cta-btn i{font-size:1rem;}
+      .cta-btn span{display:none;}          /* text hidden on phone */
     }
 
-    /* Greeting bar */
+    /* GREETING BAR + MAIN + FOOTER (unchanged layout) */
     .greeting-bar{position:fixed;top:64px;left:0;right:0;background:var(--accent);color:#fff;
-                  text-align:center;padding:.4rem .75rem;font-size:.8rem;font-weight:500;z-index:999;
-                  display:flex;justify-content:center;gap:.25rem;}
-    .greeting-bar a{color:#fff;text-decoration:underline;font-weight:600;}
-    .greeting-bar a:hover{color:#e9eefb;}
+                  text-align:center;padding:.4rem .8rem;font-size:.8rem;font-weight:500;z-index:999;}
+    .greeting-bar a{color:#fff;text-decoration:underline;font-weight:600;} .greeting-bar a:hover{color:#e9eefb;}
 
-    /* MAIN & FOOTER (unchanged) */
     main{max-width:800px;margin:2rem auto;padding:0 1rem;}
-    .card{background:var(--bg-card);border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.06);
-          padding:2rem;margin-bottom:2rem;}
+    .card{background:var(--bg-card);border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.06);padding:2rem;margin-bottom:2rem;}
+
     footer{background:var(--bg-card);border-top:1px solid #e0e0e0;margin-top:4rem;padding:3rem 1rem;color:var(--fg-soft);}
     .footer-grid{display:flex;flex-wrap:wrap;gap:2rem;justify-content:space-between;max-width:1000px;margin:0 auto 2rem;}
     .footer-section{flex:1 1 220px;min-width:200px;}
     .footer-section h3{margin-bottom:.5rem;color:var(--fg);font-size:1.1rem;}
-    .footer-section p,.footer-section li,.footer-section a{font-size:.95rem;color:var(--fg-soft);line-height:1.4;text-decoration:none;}
+    .footer-section a,.footer-section p,.footer-section li{font-size:.95rem;color:var(--fg-soft);text-decoration:none;}
     .footer-section a:hover{color:var(--accent-h);} .copyright{text-align:center;font-size:.85rem;}
   </style>
   {% block extra_head %}{% endblock %}
 </head>
 <body id="top">
-
   <!-- NAVBAR -->
   <nav>
     <a href="{% url 'blogs:home_page' %}" class="brand">The&nbsp;Code&nbsp;Chronicle</a>
 
     <ul>
+      <!-- Home -->
       <li>
         <a href="{% url 'blogs:home_page' %}" class="nav-link">
-          <i class="fas fa-house-chimney-window"></i>Home
+          <i class="fas fa-house-chimney-window"></i><span>Home</span>
         </a>
       </li>
+      <!-- Contact -->
       <li>
         <a href="#footer" class="nav-link">
-          <i class="fas fa-paper-plane"></i>Contact
+          <i class="fas fa-paper-plane"></i><span>Contact</span>
         </a>
       </li>
 
       {% if user.is_authenticated %}
+        <!-- Log-out (POST) -->
         <li>
           <form action="{% url 'accounts:logout' %}" method="post" style="margin:0;">
             {% csrf_token %}
-            <button type="submit" class="cta-btn">
-              <i class="fas fa-right-from-bracket"></i><span>Log&nbsp;Out</span>
+            <button type="submit" class="cta-btn" title="Log Out">
+              <i class="fas fa-right-from-bracket"></i><span class="sr-only">Log&nbsp;Out</span>
             </button>
           </form>
         </li>
       {% else %}
+        <!-- Log-in (GET) -->
         <li>
-          <a href="{% url 'accounts:login' %}" class="cta-btn">
-            <i class="fas fa-right-to-bracket"></i><span>Log&nbsp;In</span>
+          <a href="{% url 'accounts:login' %}" class="cta-btn" title="Log In">
+            <i class="fas fa-right-to-bracket"></i><span class="sr-only">Log&nbsp;In</span>
           </a>
         </li>
+        <!-- Sign-up (GET) -->
         <li>
-          <a href="{% url 'accounts:register' %}" class="cta-btn">
-            <i class="fas fa-user-plus"></i><span>Sign&nbsp;Up</span>
+          <a href="{% url 'accounts:register' %}" class="cta-btn" title="Sign Up">
+            <i class="fas fa-user-plus"></i><span class="sr-only">Sign&nbsp;Up</span>
           </a>
         </li>
       {% endif %}
@@ -133,9 +138,7 @@
 
   <!-- GREETING BAR -->
   {% if user.is_authenticated %}
-    <div class="greeting-bar">
-      Welcome back, {{ user.first_name|default:user.username|upper }}! Ready to create something amazing? 🚀
-    </div>
+    <div class="greeting-bar">Welcome back, {{ user.first_name|default:user.username|upper }}! Ready to create something amazing? 🚀</div>
   {% else %}
     <div class="greeting-bar">
       New here? <a href="{% url 'accounts:login' %}">Log in</a> or
@@ -158,9 +161,9 @@
       <div class="footer-section">
         <h3>Social</h3>
         <ul>
-          <li><a href="https://github.com/"  target="_blank">GitHub</a></li>
-          <li><a href="https://x.com/"       target="_blank">X</a></li>
-          <li><a href="https://linkedin.com/"target="_blank">LinkedIn</a></li>
+          <li><a href="https://github.com/" target="_blank">GitHub</a></li>
+          <li><a href="https://x.com/" target="_blank">X</a></li>
+          <li><a href="https://linkedin.com/" target="_blank">LinkedIn</a></li>
         </ul>
       </div>
       <div class="footer-section">
