@@ -138,7 +138,7 @@ from platformshconfig import Config
 
 config = Config()
 
-if config.is_valid():
+if config.is_valid_platform():
     ALLOWED_HOSTS.append(".platformsh.site")
 
     if config.appDir:
