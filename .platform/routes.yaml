@@ -2,7 +2,7 @@
 
 "https://{default}/":
   type: upstream
-  upstream: "the_code_chronicle:http"
+  upstream: "blog_project:http"
 
 "http://www.{default}/":
   type: redirect
