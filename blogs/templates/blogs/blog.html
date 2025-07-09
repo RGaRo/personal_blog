@@ -1,0 +1,169 @@
+{# templates/blogs/blog.html #}
+{% extends "blogs/base.html" %}
+
+{% block title %}Blog{% endblock %}
+
+{% block extra_head %}
+  <!-- Font Awesome for floating icons -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        integrity="sha512-3hI0K8RldlEf5y7c2cYq..."
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer" />
+
+  <style>
+    :root {
+      --accent: #8fa3c2;
+      --accent-h: #758bad;
+      --danger: #e74c3c;
+      --danger-h: #c0392b;
+    }
+
+    .blog-cover {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      letter-spacing: .02em;
+      transition: background .2s, transform .15s;
+    }
+    .btn:hover {
+      background: var(--accent-h);
+      transform: translateY(-1px);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+      margin-left: auto;
+    }
+
+    .blog-date {
+      font-size: .8rem;
+      color: var(--fg-soft);
+      margin-bottom: 1rem;
+      line-height: 1.4;
+    }
+
+    .blog-body {
+      margin-top: 1rem;
+      line-height: 1.7;
+      color: var(--fg-soft);
+    }
+
+    /* Floating buttons */
+    .edit-btn, .delete-btn {
+      position: fixed;
+      bottom: 2rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, .15);
+      transition: background .2s, transform .15s;
+      z-index: 1001;
+    }
+    .edit-btn {
+      right: 2rem;
+      background: var(--accent);
+    }
+    .edit-btn:hover {
+      background: var(--accent-h);
+      transform: translateY(-2px);
+    }
+
+    .delete-btn {
+      right: 5.5rem;
+      background: var(--danger);
+    }
+    .delete-btn:hover {
+      background: var(--danger-h);
+      transform: translateY(-2px);
+    }
+
+    /* Tooltips — above and centered */
+    .edit-btn::after,
+    .delete-btn::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: 110%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-card, #fff);
+      color: var(--fg, #000);
+      padding: 0.35rem 0.7rem;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+      font-size: 0.75rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+      z-index: 9999;
+    }
+
+    .edit-btn:hover::after,
+    .edit-btn:focus::after,
+    .delete-btn:hover::after,
+    .delete-btn:focus::after {
+      opacity: 1;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section class="card blog-cover">
+
+    <div class="btn-group">
+      <a href="{% url 'blogs:topic' topic.id %}" class="btn">← Back to Topic</a>
+      <a href="{% url 'blogs:topics' %}" class="btn">← Back to Topics</a>
+    </div>
+
+    {% for entry in blog %}
+      <h1>{{ entry.title }}</h1>
+
+      <p class="blog-date">
+        Published: {{ entry.date_added|date:"M j, Y – H:i" }}<br>
+        Last modified: {{ entry.date_last_modified|date:"M j, Y – H:i" }}
+      </p>
+
+      <div class="blog-body">
+        {{ entry.text|linebreaks }}
+      </div>
+
+      <!-- Floating edit & delete buttons with tooltips -->
+      <a href="{% url 'blogs:edit_blog' topic.id entry.id %}"
+         class="edit-btn"
+         data-tip="Edit post">
+        <i class="fas fa-pen"></i>
+      </a>
+
+      <a href="{% url 'blogs:delete_blog' topic.id entry.id %}"
+         class="delete-btn"
+         data-tip="Delete post">
+        <i class="fas fa-trash"></i>
+      </a>
+    {% empty %}
+      <p>No blog post found.</p>
+    {% endfor %}
+
+  </section>
+{% endblock %}

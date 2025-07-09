@@ -1,0 +1,81 @@
+{# templates/home.html #}
+{% extends "blogs/base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block extra_head %}
+  <style>
+    :root {
+      --accent:   #8fa3c2;
+      --accent-h: #758bad;
+    }
+
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 1.25rem;
+    }
+
+    /* Equal-width container */
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      width: 100%;
+      max-width: 480px;
+      justify-content: center;
+    }
+
+    .btn {
+      flex: 1 1 200px;
+      text-align: center;
+      padding: 0.6rem 1.25rem;
+      font-size: 0.875rem;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: background 0.2s ease, transform 0.2s;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+    }
+
+    .btn:hover,
+    .btn:focus {
+      background: var(--accent-h);
+      transform: translateY(-1px);
+    }
+
+    .card a:not(.btn) {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .card a:not(.btn):hover {
+      text-decoration: underline;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section class="card hero">
+    <h1>Welcome to The Code Chronicle</h1>
+    <p>
+      This blog is a growing collection of ideas, lessons, and code experiments from my journey as a programmer. <br>
+      You’ll find practical tips, thoughtful breakdowns, and insights 
+      meant to inspire better thinking and better code—no matter where you are in your learning path.
+    </p>
+    <div class="btn-group">
+      <a href="{% url 'blogs:topics' %}" class="btn">
+        🧭 Explore & Manage Your Blogs
+      </a>
+      <a href="{% url 'blogs:search' %}" class="btn">
+        🌍 Discover Community Blogs
+      </a>
+    </div>
+  </section>
+{% endblock %}

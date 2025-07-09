@@ -1,0 +1,118 @@
+{# templates/accounts/register.html #}
+{% extends "blogs/base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block extra_head %}
+  <style>
+    :root {
+      --accent:   #8fa3c2;   /* same grey-blue family used on login */
+      --accent-h: #758bad;
+    }
+
+    /* Center the card */
+    .register-wrap {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    .register-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--bg-card);
+      border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+      padding: 2.25rem 2rem 2.5rem;
+      text-align: center;
+      transition: box-shadow 0.25s ease;
+    }
+    .register-card:hover { box-shadow: 0 10px 24px rgba(0, 0, 0, 0.09); }
+
+    .register-card h2   { margin-bottom: 0.25rem; font-size: 1.4rem; font-weight: 700; color: var(--fg); }
+    .register-card p.tagline { color: var(--fg-soft); font-size: 0.92rem; margin-bottom: 1.75rem; }
+
+    .register-card div { margin-bottom: 1.1rem; text-align: left; }
+
+    .register-card input {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      border: 1px solid var(--fg-soft);
+      border-radius: 5px;
+      font-size: 0.9rem;
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+    .register-card input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(143,163,194,0.25);
+    }
+
+    .btn-register {
+      width: 100%;
+      padding: 0.55rem 0;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .btn-register:hover { background: var(--accent-h); }
+
+    .form-error {
+      background: #fcebea;
+      color: #c0392b;
+      padding: 0.6rem 1rem;
+      border-radius: 5px;
+      font-size: 0.83rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .register-links {
+      margin-top: 1.4rem;
+      font-size: 0.8rem;
+    }
+    .register-links a {
+      color: var(--accent);
+      text-decoration: none;
+      margin: 0 0.5rem;
+      transition: color 0.2s ease;
+    }
+    .register-links a:hover { color: var(--accent-h); }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section class="register-wrap">
+    <div class="register-card">
+      <h2>Create your account 🎉</h2>
+      <p class="tagline">Join the community and share your code journey.</p>
+
+      <form action="{% url 'accounts:register' %}" method="post" novalidate>
+        {% csrf_token %}
+
+        {# Non-field errors #}
+        {% if form.non_field_errors or form.errors %}
+          <div class="form-error">
+            {{ form.non_field_errors|default:"Please correct the highlighted fields." }}
+          </div>
+        {% endif %}
+
+        {{ form.as_div }}
+
+        <button type="submit" class="btn-register">Register</button>
+      </form>
+
+      <div class="register-links">
+        Already have an account?
+        <a href="{% url 'accounts:login' %}">Log in here</a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

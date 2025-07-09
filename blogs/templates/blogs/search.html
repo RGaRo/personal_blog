@@ -1,0 +1,150 @@
+{# templates/blogs/search.html #}
+{% extends "blogs/base.html" %}
+
+{% block title %}Find Posts{% endblock %}
+
+{% block extra_head %}
+  <style>
+    :root {
+      --accent:   #8fa3c2;
+      --accent-h: #758bad;
+    }
+
+    .search-cover {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Finder bar */
+    .finder {
+      position: relative;
+      margin-bottom: 1.25rem;
+    }
+    .finder input {
+      width: 100%;
+      padding: 0.65rem 2.75rem 0.65rem 0.9rem; /* space for icon */
+      border: 1px solid var(--fg-soft);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+    .finder input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(143,163,194,0.25);
+    }
+    .finder i {
+      position: absolute;
+      right: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--fg-soft);
+      pointer-events: none;
+    }
+
+    /* Result list */
+    .result-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .result-item {
+      background: var(--bg-card);
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,.06);
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .result-item a {
+      color: var(--fg);
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .result-item a:hover { color: var(--accent); }
+    .result-snippet { font-size: 0.85rem; color: var(--fg-soft); line-height: 1.4; }
+    .result-meta    { font-size: 0.78rem; color: var(--fg-soft); }
+
+    .empty-note {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--fg-soft);
+      margin-top: 2rem;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section class="card search-cover">
+
+    <!-- Finder bar -->
+    <div class="finder">
+      <input id="searchInput"
+             type="text"
+             placeholder="Start typing to filter posts…"
+             value="{{ query|default_if_none:'' }}">
+      <i class="fas fa-magnifying-glass"></i>
+    </div>
+
+    <!-- Result list -->
+    {% if blogs %}
+      <ul id="resultList" class="result-list">
+        {% for blog in blogs %}
+          <li class="result-item"
+              data-search="{{ blog.title|lower }} {{ blog.text|lower }}">
+            <a href="{% url 'blogs:public_blog' blog.id %}">
+              {{ blog.title|truncatechars:60 }}
+            </a>
+            <p class="result-snippet">
+              {{ blog.text|truncatechars:120 }}
+            </p>
+            <span class="result-meta">
+              {{ blog.date_added|date:"M j, Y – H:i" }}
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="empty-note">No posts found.</p>
+    {% endif %}
+  </section>
+
+  <script>
+    /* Live filter on keyup */
+    (function () {
+      const input = document.getElementById("searchInput");
+      const list  = document.getElementById("resultList");
+      if (!input || !list) return;
+
+      input.addEventListener("keyup", () => {
+        const needle = input.value.toLowerCase().trim();
+        let visible  = 0;
+
+        list.querySelectorAll(".result-item").forEach(item => {
+          const hay = item.dataset.search;
+          const match = hay.includes(needle);
+          item.style.display = match ? "" : "none";
+          if (match) visible++;
+        });
+
+        // show / hide “no results” note dynamically
+        let note = document.querySelector(".empty-note");
+        if (!note) {
+          note = document.createElement("p");
+          note.className = "empty-note";
+          note.textContent = "No matching posts found ⌥";
+          list.after(note);
+        }
+        note.style.display = visible ? "none" : "block";
+      });
+    })();
+  </script>
+{% endblock %}

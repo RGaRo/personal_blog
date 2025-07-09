@@ -1,0 +1,66 @@
+{# templates/blogs/delete_blog.html #}
+{% extends "blogs/base.html" %}
+
+{% block title %}Delete Blog{% endblock %}
+
+{% block extra_head %}
+  <style>
+    :root{
+      --accent:#8fa3c2;     /* regular buttons   */
+      --accent-h:#758bad;   /* hover variant     */
+      --danger:#e74c3c;     /* delete button     */
+      --danger-h:#c0392b;   /* delete hover      */
+    }
+
+    /* Center confirmation card vertically */
+    .confirm-cover{
+      min-height:80vh;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      gap:1.5rem;
+    }
+
+    /* Shared button style */
+    .btn{
+      display:inline-block;
+      padding:0.3rem 0.9rem;
+      font-size:0.75rem;
+      font-weight:500;
+      color:#fff;
+      background:var(--accent);
+      border:none;
+      border-radius:4px;
+      text-decoration:none;
+      transition:background .2s,transform .15s;
+    }
+    .btn:hover,.btn:focus{
+      background:var(--accent-h);
+      transform:translateY(-1px);
+    }
+
+    /* Delete button variant */
+    .btn-danger{background:var(--danger);}
+    .btn-danger:hover,.btn-danger:focus{background:var(--danger-h);}
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section class="card confirm-cover">
+    <h2>Delete this post?</h2>
+    <p style="color:var(--fg-soft);margin-top:-0.3rem;">
+      This action can’t be undone.
+    </p>
+
+    <p><strong>{{ blog.title }}</strong></p>
+
+    <form method="post"
+          style="display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Yes, Delete</button>
+      <a href="{% url 'blogs:blog_detail' topic.id blog.id %}" class="btn">Cancel</a>
+    </form>
+  </section>
+{% endblock %}

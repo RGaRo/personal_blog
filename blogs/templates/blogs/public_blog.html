@@ -1,0 +1,99 @@
+{# templates/blogs/blog.html #}
+{% extends "blogs/base.html" %}
+
+{% block title %}Blog{% endblock %}
+
+{% block extra_head %}
+  <!-- Font Awesome kept for potential icons -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        integrity="sha512-3hI0K8RldlEf5y7c2cYq..."
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer">
+
+  <style>
+    :root{
+      --accent:   #8fa3c2;   /* lighter grey-blue */
+      --accent-h: #758bad;   /* hover variant     */
+    }
+
+    .blog-cover{
+      min-height:80vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* Compact nav buttons */
+    .btn{
+      display:inline-block;
+      padding:0.2rem 0.6rem;
+      font-size:0.7rem;
+      font-weight:500;
+      color:#fff;
+      background:var(--accent);
+      border:none;
+      border-radius:4px;
+      text-decoration:none;
+      letter-spacing:0.02em;
+      transition:background .2s, transform .15s;
+    }
+    .btn:hover{ background:var(--accent-h); transform:translateY(-1px); }
+
+    .btn-group{
+      display:flex;
+      gap:0.5rem;
+      flex-wrap:wrap;
+      margin-bottom:1rem;
+      margin-left:auto;
+    }
+
+    .blog-author{
+      font-size:0.85rem;
+      color:var(--fg-soft);
+      margin-bottom:0.4rem;
+    }
+
+    .blog-date{
+      font-size:0.8rem;
+      color:var(--fg-soft);
+      margin-bottom:1rem;
+      line-height:1.4;
+    }
+
+    .blog-body{
+      margin-top:1rem;
+      line-height:1.7;
+      color:var(--fg-soft);
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section class="card blog-cover">
+
+    <div class="btn-group">
+      <a href="{% url 'blogs:search' %}" class="btn">← Back to Search</a>
+    </div>
+
+    {% for entry in blog %}
+      <h1>{{ entry.title }}</h1>
+
+      <!-- Username placed just below the title -->
+      <p class="blog-author">
+        By&nbsp;{{ entry.owner.username }}
+      </p>
+
+      <p class="blog-date">
+        Published: {{ entry.date_added|date:"M j, Y – H:i" }}<br>
+        Last modified:&nbsp;{{ entry.date_last_modified|date:"M j, Y – H:i" }}
+      </p>
+
+      <div class="blog-body">
+        {{ entry.text|linebreaks }}
+      </div>
+    {% empty %}
+      <p>No blog post found.</p>
+    {% endfor %}
+
+  </section>
+{% endblock %}

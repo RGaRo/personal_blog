@@ -1,0 +1,161 @@
+{% comment %}
+  templates/base.html  
+  ▸ Icons (Home + Contact) remain fancy  
+  ▸ Added `align-items:center;` to .nav-link so each icon is perfectly vertically aligned with its label.
+{% endcomment %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        integrity="sha512-3hI0K8RldlEf5y7c2cYq..."
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer" />
+
+  <style>
+    :root{ --bg:#f9f9f9; --bg-card:#fff; --fg:#222; --fg-soft:#555;
+           --accent:#0077ff; --accent-h:#005fcc; }
+
+    /* Reset & body */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+         background:var(--bg); color:var(--fg); line-height:1.6; min-height:100vh; padding-top:96px;}
+
+    /* NAVBAR */
+    nav{position:fixed;top:0;left:0;right:0;height:64px;background:var(--bg-card);
+        border-bottom:1px solid #e0e0e0;display:flex;align-items:center;
+        justify-content:space-between;padding:0 2rem;z-index:1000;}
+    .brand{font-weight:700;font-size:1.25rem;color:var(--fg);text-decoration:none;transition:color .25s;}
+    .brand:hover{color:var(--accent)}
+
+    nav ul{list-style:none;display:flex;gap:1.4rem;align-items:center;}
+
+    .nav-link{
+      position:relative;display:inline-flex;align-items:center;gap:.35rem;
+      font-weight:500;color:var(--fg-soft);text-decoration:none;transition:color .25s;
+    }
+    .nav-link::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;
+                     background:var(--accent);transition:width .25s;}
+    .nav-link:hover{color:var(--accent)} .nav-link:hover::after{width:100%}
+
+    /* CTA buttons */
+    .cta-btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+             padding:.4rem 1rem;font-size:.75rem;font-weight:600;color:#fff;
+             background:linear-gradient(135deg,var(--accent),var(--accent-h));
+             border:none;border-radius:20px;cursor:pointer;text-decoration:none;
+             box-shadow:0 3px 6px rgba(0,0,0,.08);transition:transform .2s,box-shadow .2s;}
+    .cta-btn i{font-size:.85rem;} .cta-btn:hover{transform:translateY(-2px);box-shadow:0 6px 12px rgba(0,0,0,.12);}
+
+    /* Greeting bar */
+    .greeting-bar{position:fixed;top:64px;left:0;right:0;background:var(--accent);color:#fff;
+                  text-align:center;padding:.4rem .75rem;font-size:.8rem;font-weight:500;z-index:999;
+                  display:flex;justify-content:center;gap:.25rem;}
+    .greeting-bar a{color:#fff;text-decoration:underline;font-weight:600;}
+    .greeting-bar a:hover{color:#e9eefb;}
+
+    /* MAIN */
+    main{max-width:800px;margin:2rem auto;padding:0 1rem;}
+    .card{background:var(--bg-card);border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.06);
+          padding:2rem;margin-bottom:2rem;}
+
+    /* FOOTER */
+    footer{background:var(--bg-card);border-top:1px solid #e0e0e0;margin-top:4rem;padding:3rem 1rem;color:var(--fg-soft);}
+    .footer-grid{display:flex;flex-wrap:wrap;gap:2rem;justify-content:space-between;max-width:1000px;margin:0 auto 2rem;}
+    .footer-section{flex:1 1 220px;min-width:200px;}
+    .footer-section h3{margin-bottom:.5rem;color:var(--fg);font-size:1.1rem;}
+    .footer-section p,.footer-section li,.footer-section a{font-size:.95rem;color:var(--fg-soft);line-height:1.4;text-decoration:none;}
+    .footer-section a:hover{color:var(--accent-h);} .copyright{text-align:center;font-size:.85rem;}
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body id="top">
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="{% url 'blogs:home_page' %}" class="brand">The&nbsp;Code&nbsp;Chronicle</a>
+
+    <ul>
+      <li>
+        <a href="{% url 'blogs:home_page' %}" class="nav-link">
+          <i class="fas fa-house-chimney-window"></i>Home
+        </a>
+      </li>
+      <li>
+        <a href="#footer" class="nav-link">
+          <i class="fas fa-paper-plane"></i>Contact
+        </a>
+      </li>
+
+      {% if user.is_authenticated %}
+        <li>
+          <form action="{% url 'accounts:logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="cta-btn">
+              <i class="fas fa-right-from-bracket"></i><span>Log&nbsp;Out</span>
+            </button>
+          </form>
+        </li>
+      {% else %}
+        <li>
+          <a href="{% url 'accounts:login' %}" class="cta-btn">
+            <i class="fas fa-right-to-bracket"></i><span>Log&nbsp;In</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'accounts:register' %}" class="cta-btn">
+            <i class="fas fa-user-plus"></i><span>Sign&nbsp;Up</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <!-- GREETING BAR -->
+  {% if user.is_authenticated %}
+    <div class="greeting-bar">
+      Welcome back, {{ user.first_name|default:user.username|upper }}! Ready to create something amazing? 🚀
+    </div>
+  {% else %}
+    <div class="greeting-bar">
+      New here? <a href="{% url 'accounts:login' %}">Log in</a> or
+      <a href="{% url 'accounts:register' %}">sign up</a> and share your coding journey! 🚀
+    </div>
+  {% endif %}
+
+  <!-- MAIN -->
+  <main>{% block content %}{% endblock %}</main>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <div class="footer-grid">
+      <div class="footer-section">
+        <h3>Contact</h3>
+        <p>Email: rene.garza.rojas@outlook.com</p>
+        <p>Phone: +52&nbsp;82&nbsp;8289&nbsp;0526</p>
+        <p>Monterrey, NL, Mexico</p>
+      </div>
+      <div class="footer-section">
+        <h3>Social</h3>
+        <ul>
+          <li><a href="https://github.com/"  target="_blank">GitHub</a></li>
+          <li><a href="https://x.com/"       target="_blank">X</a></li>
+          <li><a href="https://linkedin.com/"target="_blank">LinkedIn</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Programming Skills</h3>
+        <ul><li>Django</li></ul>
+      </div>
+    </div>
+    <p class="copyright">&copy; All rights reserved</p>
+  </footer>
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

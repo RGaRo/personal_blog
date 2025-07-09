@@ -1,0 +1,98 @@
+{# templates/blogs/new_topic.html #}
+{% extends "blogs/base.html" %}
+
+{% block title %}New Topic{% endblock %}
+
+{% block extra_head %}
+  <style>
+    /* ─── Button colour overrides ───────────────────────────── */
+    :root {
+      --accent:   #8fa3c2;   /* lighter grey-blue */
+      --accent-h: #758bad;   /* hover variant    */
+    }
+    /* ───────────────────────────────────────────────────────── */
+
+    /* Keep footer below the fold */
+    .topic-form-cover {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Default spacing for each form row produced by form.as_div */
+    .topic-form-cover div {
+      margin-bottom: 1.25rem;
+    }
+
+    /* Input / select / textarea styling */
+    .topic-form-cover input,
+    .topic-form-cover select,
+    .topic-form-cover textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--fg-soft);
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    .topic-form-cover input:focus,
+    .topic-form-cover textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(167,185,212,0.25);
+    }
+
+    /* Compact buttons */
+    .btn {
+      display: inline-block;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+    .btn:hover,
+    .btn:focus { background: var(--accent-h); transform: translateY(-1px); }
+
+    /* Right-aligned button group */
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-left: auto;
+      flex-wrap: wrap;
+    }
+
+    /* Error messages */
+    .errorlist {
+      color: #d14343;
+      list-style: none;
+      margin: 0 0 0.5rem 0;
+      padding: 0;
+      font-size: 0.8rem;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section class="card topic-form-cover">
+    <h1 style="margin-bottom:0.5rem">Add a New Topic</h1>
+    <p style="color:var(--fg-soft)">
+      Give your topic a concise title and start writing!
+    </p>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form.as_div }}
+
+      <div class="btn-group">
+        <a href="{% url 'blogs:topics' %}" class="btn" style="background:var(--fg-soft)">Cancel</a>
+        <button type="submit" class="btn">Save Topic</button>
+      </div>
+    </form>
+  </section>
+{% endblock %}
