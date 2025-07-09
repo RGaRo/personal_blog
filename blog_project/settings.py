@@ -10,7 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "clave-de-desarrollo-insegura")
+DEBUG = os.environ.get("DJANGO_DEBUG", "") == "1"
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,14 +23,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (
-    "django-insecure-is+0i8&x)zv@!j%2n287b(invtzov=9y+rty5(ee7e#+#cphf#"
-)
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -122,6 +118,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+ALLOWED_HOSTS = ["*"]  # Cambia a tu dominio en producción
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -132,29 +132,3 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_REDIRECT_URL = "blogs:home_page"
 LOGOUT_REDIRECT_URL = "blogs:home_page"
 LOGIN_URL = "accounts:login"
-
-# Platform.sh settings
-from platformshconfig import Config
-
-config = Config()
-
-if config.is_valid_platform():
-    ALLOWED_HOSTS.append(".platformsh.site")
-
-    if config.appDir:
-        STATIC_ROOT = Path(config.appDir) / "static"
-    if config.projectEntropy:
-        SECRET_KEY = config.projectEntropy
-
-    if not config.in_build():
-        db_settings = config.credentials("database")
-        DATABASES = {
-            "default": {
-                "ENGINE": "django.db.backends.postgresql",
-                "NAME": db_settings["path"],
-                "USER": db_settings["username"],
-                "PASSWORD": db_settings["password"],
-                "HOST": db_settings["host"],
-                "PORT": db_settings["port"],
-            },
-        }
