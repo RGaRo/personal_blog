@@ -1,4 +1,3 @@
-{# templates/accounts/register.html #}
 {% extends "blogs/base.html" %}
 
 {% block title %}Sign Up{% endblock %}
@@ -6,11 +5,14 @@
 {% block extra_head %}
   <style>
     :root {
-      --accent:   #8fa3c2;   /* same grey-blue family used on login */
+      --accent:   #8fa3c2;
       --accent-h: #758bad;
+      --neutral:  #888888; /* gray color for all conditions */
+      --error-bg: #fdecea;
+      --error-border: #f5c6cb;
+      --error-color: #c0392b;
     }
 
-    /* Center the card */
     .register-wrap {
       min-height: 80vh;
       display: flex;
@@ -35,7 +37,17 @@
     .register-card h2   { margin-bottom: 0.25rem; font-size: 1.4rem; font-weight: 700; color: var(--fg); }
     .register-card p.tagline { color: var(--fg-soft); font-size: 0.92rem; margin-bottom: 1.75rem; }
 
-    .register-card div { margin-bottom: 1.1rem; text-align: left; }
+    .register-card div {
+      margin-bottom: 1.1rem;
+      text-align: left;
+    }
+
+    .register-card label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      color: var(--fg);
+    }
 
     .register-card input {
       width: 100%;
@@ -66,12 +78,24 @@
     .btn-register:hover { background: var(--accent-h); }
 
     .form-error {
-      background: #fcebea;
-      color: #c0392b;
-      padding: 0.6rem 1rem;
-      border-radius: 5px;
-      font-size: 0.83rem;
+      background: var(--error-bg);
+      color: var(--error-color);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-family: monospace;
       margin-bottom: 1.2rem;
+      border: 1.5px solid var(--error-border);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+    }
+
+    .form-error::before {
+      content: "⚠️";
+      font-size: 1.1rem;
+      line-height: 1;
     }
 
     .register-links {
@@ -85,6 +109,33 @@
       transition: color 0.2s ease;
     }
     .register-links a:hover { color: var(--accent-h); }
+
+    /* Conditions style - always gray with circle */
+    .helptext {
+      font-size: 0.78rem;
+      color: var(--neutral);
+      margin-top: 0.4rem;
+    }
+
+    .helptext ul {
+      padding-left: 1.2rem;
+      list-style: none;
+    }
+
+    .helptext li {
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--neutral);
+    }
+
+    .helptext li::before {
+      content: "●";
+      font-size: 0.75rem;
+      line-height: 1;
+      color: var(--neutral);
+    }
   </style>
 {% endblock %}
 
@@ -97,7 +148,6 @@
       <form action="{% url 'accounts:register' %}" method="post" novalidate>
         {% csrf_token %}
 
-        {# Non-field errors #}
         {% if form.non_field_errors or form.errors %}
           <div class="form-error">
             {{ form.non_field_errors|default:"Please correct the highlighted fields." }}

@@ -1,0 +1,67 @@
+{# templates/500.html #}
+{% extends "blogs/base.html" %}
+
+{% block title %}Server Error{% endblock %}
+
+{% block extra_head %}
+  <style>
+    :root{
+      --accent:#8fa3c2;
+      --accent-h:#758bad;
+    }
+
+    .error-wrap{
+      min-height:80vh;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      gap:1.5rem;
+    }
+
+    .error-code{
+      font-size:4rem;
+      font-weight:700;
+      color:var(--accent);
+      line-height:1;
+    }
+
+    .error-msg{
+      font-size:1.2rem;
+      font-weight:600;
+      color:var(--fg);
+    }
+
+    .btn{
+      display:inline-block;
+      padding:0.45rem 1.2rem;
+      font-size:0.85rem;
+      font-weight:600;
+      color:#fff;
+      background:var(--accent);
+      border-radius:6px;
+      text-decoration:none;
+      transition:background .2s ease;
+    }
+    .btn:hover,
+    .btn:focus{
+      background:var(--accent-h);
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section class="card error-wrap">
+    <div class="error-code">500</div>
+    <p class="error-msg">Internal Server Error</p>
+
+    <p style="max-width:420px;color:var(--fg-soft);">
+      Something went wrong on our side while processing your request.
+      Our team has been notified. Please try again in a moment, or head
+      back to the homepage.
+    </p>
+
+    <a href="{% url 'blogs:home_page' %}" class="btn">←&nbsp;Back&nbsp;to&nbsp;Home</a>
+  </section>
+{% endblock %}
