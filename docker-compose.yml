@@ -6,8 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: django_web
-    env_file:
-      - .env
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
     volumes:
       - ./staticfiles:/home/app/staticfiles/
       - ./data/db.sqlite3:/home/app/db.sqlite3
@@ -20,5 +20,3 @@ services:
 volumes:
   static_volume:
   db_volume:
-
-
