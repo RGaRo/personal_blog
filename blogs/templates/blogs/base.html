@@ -1,7 +1,8 @@
 {% comment %}
-  templates/base.html  
-  ▸ Icons (Home + Contact) remain fancy  
-  ▸ Added `align-items:center;` to .nav-link so each icon is perfectly vertically aligned with its label.
+  templates/base.html (mobile-friendly buttons)
+  – Keeps the overall structure identical.
+  – Enlarges CTA buttons’ tap-area (WCAG ≥ 44 × 44 px).  
+  – Adds a mobile rule so each button spans full width (easy thumb reach).
 {% endcomment %}
 
 <!DOCTYPE html>
@@ -44,13 +45,29 @@
                      background:var(--accent);transition:width .25s;}
     .nav-link:hover{color:var(--accent)} .nav-link:hover::after{width:100%}
 
-    /* CTA buttons */
-    .cta-btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
-             padding:.4rem 1rem;font-size:.75rem;font-weight:600;color:#fff;
-             background:linear-gradient(135deg,var(--accent),var(--accent-h));
-             border:none;border-radius:20px;cursor:pointer;text-decoration:none;
-             box-shadow:0 3px 6px rgba(0,0,0,.08);transition:transform .2s,box-shadow .2s;}
-    .cta-btn i{font-size:.85rem;} .cta-btn:hover{transform:translateY(-2px);box-shadow:0 6px 12px rgba(0,0,0,.12);}
+    /* CTA buttons – larger hit-area */
+    .cta-btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+      padding:.55rem 1.2rem;               /* ↑ bigger */
+      min-width:110px;                     /* prevent too small */
+      min-height:44px; border-radius:24px; /* WCAG compliant */
+      font-size:.8rem;font-weight:600;color:#fff;
+      background:linear-gradient(135deg,var(--accent),var(--accent-h));
+      border:none;cursor:pointer;text-decoration:none;
+      box-shadow:0 3px 6px rgba(0,0,0,.08);
+      transition:transform .2s,box-shadow .2s;
+      touch-action:manipulation;           /* faster taps on mobile */
+    }
+    .cta-btn i{font-size:.9rem;}
+    .cta-btn:hover{transform:translateY(-2px);box-shadow:0 6px 12px rgba(0,0,0,.12);}
+
+    /* MOBILE: stack nav items & make buttons full width */
+    @media(max-width:600px){
+      nav{flex-wrap:wrap;height:auto;padding:0 1rem 0.5rem;}
+      nav ul{flex-direction:column;gap:.9rem;width:100%;margin-top:.5rem;}
+      .nav-link i{display:none;}                 /* hide extra icon text */
+      .cta-btn{width:100%;justify-content:center;}  /* thumb-friendly */
+    }
 
     /* Greeting bar */
     .greeting-bar{position:fixed;top:64px;left:0;right:0;background:var(--accent);color:#fff;
@@ -59,12 +76,10 @@
     .greeting-bar a{color:#fff;text-decoration:underline;font-weight:600;}
     .greeting-bar a:hover{color:#e9eefb;}
 
-    /* MAIN */
+    /* MAIN & FOOTER (unchanged) */
     main{max-width:800px;margin:2rem auto;padding:0 1rem;}
     .card{background:var(--bg-card);border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.06);
           padding:2rem;margin-bottom:2rem;}
-
-    /* FOOTER */
     footer{background:var(--bg-card);border-top:1px solid #e0e0e0;margin-top:4rem;padding:3rem 1rem;color:var(--fg-soft);}
     .footer-grid{display:flex;flex-wrap:wrap;gap:2rem;justify-content:space-between;max-width:1000px;margin:0 auto 2rem;}
     .footer-section{flex:1 1 220px;min-width:200px;}
@@ -94,7 +109,7 @@
 
       {% if user.is_authenticated %}
         <li>
-          <form action="{% url 'accounts:logout' %}" method="post">
+          <form action="{% url 'accounts:logout' %}" method="post" style="margin:0;">
             {% csrf_token %}
             <button type="submit" class="cta-btn">
               <i class="fas fa-right-from-bracket"></i><span>Log&nbsp;Out</span>
