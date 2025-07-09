@@ -12,10 +12,10 @@ services:
       - ./staticfiles:/home/app/staticfiles/
       - ./data/db.sqlite3:/home/app/db.sqlite3
     ports:
-      - "8000:8000"
+      - "7000:7000"
     restart: always
     entrypoint: ["/entrypoint.sh"]
-    command: gunicorn blog_project.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn blog_project.wsgi:application --bind 0.0.0.0:7000
 
 volumes:
   static_volume:
