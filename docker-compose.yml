@@ -9,8 +9,10 @@ services:
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
     volumes:
+      # Volume for static files
       - ./staticfiles:/home/app/staticfiles/
-      - ./data/db.sqlite3:/home/app/db.sqlite3
+      # Volume for SQLite database (using a named volume for persistence)
+      - db_volume:/home/app/db.sqlite3
     ports:
       - "7000:7000"
     restart: always
@@ -18,5 +20,6 @@ services:
     command: gunicorn blog_project.wsgi:application --bind 0.0.0.0:7000
 
 volumes:
+  # Named volume for the database, allowing persistence and container management
   static_volume:
   db_volume:
