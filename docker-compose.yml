@@ -8,11 +8,6 @@ services:
     container_name: django_web
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-    volumes:
-      # Volume for static files
-      - ./staticfiles:/home/app/staticfiles/
-      # Volume for SQLite database (using a named volume for persistence)
-      - db_volume:/home/app/db.sqlite3
     ports:
       - "7000:7000"
     restart: always
