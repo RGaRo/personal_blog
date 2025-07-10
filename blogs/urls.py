@@ -1,6 +1,7 @@
 """Define urls patterns for blog app."""
 
 from django.urls import path
+
 from . import views
 
 app_name = "blogs"
@@ -15,9 +16,7 @@ urlpatterns = [
     ),
     path("new_topic/", views.new_topic, name="new_topic"),
     path("new_blog/<int:topic_id>", views.new_blog, name="new_blog"),
-    path(
-        "edit_topic/<int:topic_id>", views.edit_topic, name="edit_topic"
-    ),
+    path("edit_topic/<int:topic_id>", views.edit_topic, name="edit_topic"),
     path(
         "edit_blog/<int:topic_id>/<int:blog_id>/",
         views.edit_blog,

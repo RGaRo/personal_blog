@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 # Create your models here.
 
@@ -19,9 +19,7 @@ class Topic(models.Model):
 class Blog(models.Model):
     """A blog of a specific topic."""
 
-    topic = models.ForeignKey(
-        Topic, on_delete=models.SET_DEFAULT, default=1
-    )
+    topic = models.ForeignKey(Topic, on_delete=models.SET_DEFAULT, default=1)
     title = models.CharField(max_length=60)
     text = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)

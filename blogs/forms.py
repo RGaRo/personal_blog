@@ -1,5 +1,6 @@
 from django import forms
-from .models import Topic, Blog
+
+from .models import Blog, Topic
 
 
 class TopicForm(forms.ModelForm):

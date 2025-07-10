@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django_web
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+    ports:
+      - "7000:7000"
+    restart: always
+    entrypoint: ["/entrypoint.sh"]
+    command: gunicorn blog_project.wsgi:application --bind 0.0.0.0:7000
+
+volumes:
+  # Named volume for the database, allowing persistence and container management
+  static_volume:
+  db_volume:
